@@ -70,7 +70,20 @@ const axios = require('axios');
     user, and adding that card to the DOM.
 */
 
-const followersArray = [];
+const followersArray = ['tetondan', 'dustinmyers','justsml', 'luishrd', 'bigknell'];
+
+followersArray.forEach((user)=>{
+  axios.get(`https://api.github.com/users/${user}`)
+  .then((res)=>{
+    const newCard = gitCardMaker(res)
+    entry.appendChild(newCard)
+    console.log(res)
+})
+.catch((err) =>{
+  debugger
+  console.log(err)
+  })
+})
 
 /*
   STEP 3: Create a function that accepts a single object as its only argument.
@@ -92,71 +105,80 @@ const followersArray = [];
     </div>
 */
 
-const gitCardMaker = (data) =>{
+const gitCardMaker = (obj) =>{
   const div = document.createElement('div');
   div.classList.add('card');
 
   const img = document.createElement('img');
-  img.src = data.avatar_url;
-  div.appendChild.img
+  img.src = obj.data.avatar_url;
+  
 
   const div2 =document.createElement('div');
   div2.classList.add('card-info')
-  div.appendChild.div2
+  
 
   const h3 = document.createElement('h3');
   h3.classList.add('name')
-  h3.textContent = data.name
-  div2.appendChild.h3
-
+  h3.textContent = `Name: ${obj.data.name}`
+  
   const p = document.createElement('p');
-  p.classList.add('username')
-  p.textContent = data.login
-  div2.appendChild.p
+  p.classList.add('username');
+  p.textContent = `Username: ${obj.data.login}`;
 
   const p2 = document.createElement('p');
-  p2.textContent = `Location: ${data.location}`
-  div2.appendChild.p2
-
+  p2.textContent = `Location: ${obj.data.location}`;
+ 
   const p3 = document.createElement('p');
-  p3.textContent = `Profile:`
-  div2.appendChild.p3
-
+  p3.textContent = `Profile:`;
   const a = document.createElement('a');
-  a.href = data.url
-  a.textContent = `${data.url}`
-  p3.appendChild.a
+  a.href = obj.data.url
+  a.textContent = `${obj.data.url}`
+  
 
   const p4 = document.createElement('p');
-  p4.textContent = `Followers: ${data.followers}`
-  div2.appendChild.p4
+  p4.textContent = `Followers: ${obj.data.followers}`
+  
 
   const p5 = document.createElement('p');
-  p5.textContent = `Following: ${data.following}`
-  div2.appendChild.p5
+  p5.textContent = `Following: ${obj.data.following}`
+  
 
   const p6 = document.createElement('p');
-  p6.textContent = `Bio: ${data.bio}`
-  div2.appendChild.p6
+  p6.textContent = `Bio: ${obj.data.bio}`
+ 
+
+  p3.appendChild(a);
+
+  div2.appendChild(h3);
+  div2.appendChild(p);
+  div2.appendChild(p2);
+  div2.appendChild(p3);
+  div2.appendChild(p4);
+  div2.appendChild(p5);
+  div2.appendChild(p6);
+
+  div.appendChild(img);
+  div.appendChild(div2);
+
 
   return div;
 }
+
+const entry = document.querySelector('.cards')
 //Step 4
 
-const cardsInfo = document.querySelector('.cards');
 
-axios.get("https://api.github.com/users/Rex-1031")
+
+ axios.get("https://api.github.com/users/Rex-1031")
    .then((res) =>{
-    const cardData = res.data;
-    const cardArr = gitCardMaker(cardData)
-        cardsInfo.appendChild(cardArr)
-      
-       
-     })
-     .catch((err)=> {
-       debugger
-       console.log("error", err);
-     });
+      const newCards = gitCardMaker(res)
+      entry.appendChild(newCards)
+      console.log(res)  
+  })
+  .catch((err) =>{ 
+  debugger
+  console.log(err)
+});
 
 
 
